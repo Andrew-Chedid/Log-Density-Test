@@ -28,7 +28,7 @@ jobs:
         shell: powershell
         run: |
           $logStatements = @()
-          $javaFiles = Get-ChildItem -Path "services/training_data" -Recurse -Filter "*.java"
+          $javaFiles = Get-ChildItem -Path "training_data" -Recurse -Filter "*.java"
 
           foreach ($file in $javaFiles) {
               $content = Get-Content $file.FullName -Raw
@@ -54,8 +54,8 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: Start Ollama with Docker Compose
-        run: docker-compose -f services/docker-compose.yml up -d
+      #- name: Start Ollama with Docker Compose
+      #  run: docker-compose -f services/docker-compose.yml up -d
 
       - name: Wait for Ollama to start
         run: sleep 10  # Ajuste si nécessaire
