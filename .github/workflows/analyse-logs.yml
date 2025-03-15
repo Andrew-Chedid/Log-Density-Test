@@ -36,11 +36,9 @@ jobs:
           foreach ($file in $changedFiles) {
               if (Test-Path $file) {
                   $content = Get-Content $file -Raw
-                  $matches = [regex]::Matches($content, 'LOG\.(info|debug|warn|error)\(.*?\)|System\.out\.println\(.*?\)')
 
-                  if ($matches.Count -gt 0) {
-                      $logStatements += "File: $file`n$matches`n"
-                  }
+                  $logStatements += "File: $file`n$matches`n"
+                  
               }
           }
 
