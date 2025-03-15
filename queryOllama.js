@@ -17,5 +17,4 @@ async function runQuery() {
         }
 
         console.log("Voici les changements: "+logsData );
-
     }
