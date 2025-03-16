@@ -29,7 +29,7 @@ async function runQuery() {
   
     try {
         // Get the git diff
-        const diff = execSync("git diff origin/${{ github.event.pull_request.base.ref }}").toString();
+        const diff = execSync("git diff origin/main").toString();
         //console.log(diff);
         
         if (!diff) {
@@ -41,7 +41,7 @@ async function runQuery() {
         await octokit.rest.issues.createComment({
             owner,
             repo,
-            pull_number: PR_NUMBER,
+            issue_number: PR_NUMBER,
             body: "Here is the git diff:\n```diff\n" + diff + "\n```",
           });
       
