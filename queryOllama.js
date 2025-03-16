@@ -30,7 +30,7 @@ async function runQuery() {
     try {
         // Get the git diff
         const diff = execSync("git diff origin/main").toString();
-        console.log(diff);
+        //console.log(diff);
         
         if (!diff) {
           console.log("No changes detected.");
