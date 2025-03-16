@@ -7,7 +7,7 @@
 //const PROMPT_INTRO = "Analyse et explique les logs trouvés dans ces fichiers Java :\n\n";
 
 const { execSync } = require("child_process");
-const { Octokit } = require("@octokit/rest");
+import { Octokit } from "@octokit/rest";
 
 const GITHUB_TOKEN = process.env.GITHUB_TOKEN;
 const PR_NUMBER = process.env.PR_NUMBER;
@@ -27,7 +27,7 @@ async function runQuery() {
         }
       
         // Post a comment on the PR
-        octokit.rest.issues.createComment({
+        Octokit.rest.issues.createComment({
           owner,
           repo,
           issue_number: PR_NUMBER,
