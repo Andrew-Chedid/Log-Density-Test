@@ -29,8 +29,10 @@ async function runQuery() {
   
     try {
         // Get the git diff
-        const diff = execSync("git diff origin/main -- '*.java'").toString();
-        //console.log(diff);
+        const diff = execSync("git diff --name-only origin/main").toString()
+        .split("\n")
+        .filter(file => file.endsWith(".java"))
+        .join("\n");        //console.log(diff);
         
         if (!diff) {
           console.log("No changes detected.");
