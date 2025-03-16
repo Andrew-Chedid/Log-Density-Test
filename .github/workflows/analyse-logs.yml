@@ -10,6 +10,9 @@ on:
 jobs:
   analyze-logs:
     runs-on: self-hosted
+    permissions:
+      pull-requests: write
+
     
     steps:
       - name: Checkout code
