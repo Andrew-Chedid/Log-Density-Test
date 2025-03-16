@@ -29,7 +29,7 @@ async function runQuery() {
   
     try {
         // Get the git diff
-        const diff = execSync("git diff origin/main").toString();
+        const diff = execSync("git diff origin/main -- $(git ls-files '*.java')").toString();
         //console.log(diff);
         
         if (!diff) {
