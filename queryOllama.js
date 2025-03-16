@@ -6,12 +6,12 @@
 //const MODEL = "llama3.2:3b"; // Change selon le modèle dispo
 //const PROMPT_INTRO = "Analyse et explique les logs trouvés dans ces fichiers Java :\n\n";
 
-import { execSync } from "child_process";
-import { Octokit } from "@octokit/rest";
 
 const GITHUB_TOKEN = process.env.GITHUB_TOKEN;
 const PR_NUMBER = process.env.PR_NUMBER;
 const REPO = process.env.REPO;
+
+const { execSync } = require("child_process");
 
 
 async function runQuery() {
@@ -21,7 +21,7 @@ async function runQuery() {
         console.error("Missing required environment variables");
         process.exit(1);
     }
-    
+
     const { Octokit } = await import("@octokit/rest");
 
     const [owner, repo] = REPO.split("/");
