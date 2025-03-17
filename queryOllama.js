@@ -53,6 +53,8 @@ async function runQuery() {
         
         let match;
         let lineChanges = [];
+        let filePath = '';
+        let newLine = 0;
         commentOnPR(PR_NUMBER, filePath, newLine);
         while ((match = regex.exec(diff)) !== null) {
           const filePath = match[1]; // Extract the modified file path
