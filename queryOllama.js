@@ -31,7 +31,9 @@ async function runQuery() {
         // Get the git diff
         const diff = execSync("git diff origin/main *.java").toString();
         //console.log(diff);
-        
+        const regex = /@@ -(\d+),?\d* \+(\d+),?\d* @@/g;
+        let match;
+        let lineChanges = {};
         while ((match = regex.exec(diff)) !== null) {
           const oldLine = parseInt(match[1]); // Ligne de l'ancienne version
           const newLine = parseInt(match[2]); // Ligne de la nouvelle version
