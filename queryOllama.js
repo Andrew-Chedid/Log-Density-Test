@@ -26,7 +26,7 @@ async function commentOnPR(prNumber, filePath, lineNumber) {
       repo,
       pull_number: prNumber,
       body: `Changement détecté sur la ligne 77 de CreatOption`,
-      commit_id: '87112bbdbb70f34635dcf7c6812d3960f9167fa7',
+      commit_id: '82c449b2c20938e154131f037dc9b84151b86971',
       path: 'training_data/CreateOptions.java',
       line: 77,
     });
@@ -62,7 +62,7 @@ async function runQuery() {
           const newLine = parseInt(match[2]); // Ligne de la nouvelle version
       
           lineChanges.push({filePath, newLine}); // Stocker les lignes affectées
-          commentOnPR(PR_NUMBER, filePath, newLine);
+          //commentOnPR(PR_NUMBER, filePath, newLine);
           //console.log(match);
         }
 
