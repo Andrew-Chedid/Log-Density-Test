@@ -38,7 +38,7 @@ async function runQuery() {
           commentOnPR(PR_NUMBER, filePath, newLine);
         }
 
-        console.log("Lignes changées :", Object.keys(lineChanges));
+        console.log("Lignes changées :", lineChanges);
 
         if (!diff) {
           console.log("No changes detected.");
