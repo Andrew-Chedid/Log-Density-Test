@@ -36,6 +36,7 @@ async function runQuery() {
       
           lineChanges.push({filePath, newLine}); // Stocker les lignes affectées
           commentOnPR(PR_NUMBER, filePath, newLine);
+          console.log(match)
         }
 
         console.log("Lignes changées :", lineChanges);
