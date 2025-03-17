@@ -25,12 +25,12 @@ async function commentOnPR(prNumber, filePath, lineNumber) {
       owner,
       repo,
       pull_number: prNumber,
-      body: `Changement détecté sur la ligne ${lineNumber} de ${filePath}`,
+      body: `Changement détecté sur la ligne 77 de CreatOption`,
       commit_id: commitId,
-      path: filePath,
-      line: lineNumber,
+      path: 'training_data/CreateOptions.java',
+      line: 77,
     });
-    console.log(`Commentaire ajouté sur ${filePath} à la ligne ${lineNumber}`);
+    console.log(`Commentaire ajouté sur 77 de CreatOption`);
   } catch (error) {
     console.error("Erreur lors de l'ajout du commentaire :", error);
   }
@@ -53,6 +53,7 @@ async function runQuery() {
         
         let match;
         let lineChanges = [];
+        commentOnPR(PR_NUMBER, filePath, newLine);
         while ((match = regex.exec(diff)) !== null) {
           const filePath = match[1]; // Extract the modified file path
           const newLine = parseInt(match[2]); // Ligne de la nouvelle version
