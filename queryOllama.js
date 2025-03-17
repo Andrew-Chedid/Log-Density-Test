@@ -26,7 +26,7 @@ async function runQuery() {
     try {
         // Get the git diff
         const diff = execSync("git diff origin/main *.java").toString();
-        //console.log(diff);
+        console.log("GIT DIFF:"+diff);
         const regex = /diff --git a\/(.+?) b\/\1[\s\S]+?@@ -\d+,?\d* \+(\d+),?\d* @@/g;
         
         let match;
