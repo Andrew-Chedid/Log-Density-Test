@@ -49,11 +49,14 @@ async function runQuery() {
         }
       
         // Post a comment on the PR
-        await octokit.rest.issues.createComment({
+        await octokit.rest.issues.createReviewComment({
             owner,
             repo,
-            issue_number: PR_NUMBER,
-            body: "Here is the git diff:\n```diff\n" + diff + "\n```",
+            pull_number: PR_NUMBER,
+            body: `Changement détecté sur la ligne ${lineNumber} de ${filePath}`,
+            commit_id: process.env.GITHUB_SHA,
+            path: filePath,
+            line: lineNumber,
           });
       
         console.log("Comment posted successfully.");
