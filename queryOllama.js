@@ -32,6 +32,15 @@ async function runQuery() {
         const diff = execSync("git diff origin/main *.java").toString();
         //console.log(diff);
         
+        while ((match = regex.exec(diff)) !== null) {
+          const oldLine = parseInt(match[1]); // Ligne de l'ancienne version
+          const newLine = parseInt(match[2]); // Ligne de la nouvelle version
+      
+          lineChanges[newLine] = true; // Stocker les lignes affectées
+        }
+
+        console.log("Lignes changées :", Object.keys(lineChanges));
+
         if (!diff) {
           console.log("No changes detected.");
           process.exit(0);
