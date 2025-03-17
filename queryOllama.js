@@ -26,7 +26,7 @@ async function commentOnPR(prNumber, filePath, lineNumber) {
       repo,
       pull_number: prNumber,
       body: `Changement détecté sur la ligne 77 de CreatOption`,
-      commit_id: commitId,
+      commit_id: '87112bbdbb70f34635dcf7c6812d3960f9167fa7',
       path: 'training_data/CreateOptions.java',
       line: 77,
     });
@@ -49,7 +49,7 @@ async function runQuery() {
     try {
         // Get the git diff
         const diff = execSync("git diff origin/main *.java").toString();
-        console.log("GIT DIFF:"+diff);
+        //console.log("GIT DIFF:"+diff);
         const regex = /diff --git a\/(.+?) b\/\1[\s\S]+?@@ -\d+,?\d* \+(\d+),?\d* @@/g;
         
         let match;
@@ -63,7 +63,7 @@ async function runQuery() {
       
           lineChanges.push({filePath, newLine}); // Stocker les lignes affectées
           commentOnPR(PR_NUMBER, filePath, newLine);
-          console.log(match);
+          //console.log(match);
         }
 
         console.log("Lignes changées :", lineChanges);
