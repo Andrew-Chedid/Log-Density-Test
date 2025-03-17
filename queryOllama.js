@@ -22,11 +22,7 @@ async function runQuery() {
         process.exit(1);
     }
 
-    const { Octokit } = await import("@octokit/rest");
-
-    const [owner, repo] = REPO.split("/");
-    const octokit = new Octokit({ auth: GITHUB_TOKEN });
-  
+    
     try {
         // Get the git diff
         const diff = execSync("git diff origin/main *.java").toString();
@@ -59,6 +55,11 @@ async function runQuery() {
 
 async function commentOnPR(prNumber, filePath, lineNumber) {
   try {
+    const { Octokit } = await import("@octokit/rest");
+
+    const [owner, repo] = REPO.split("/");
+    const octokit = new Octokit({ auth: GITHUB_TOKEN });
+  
     await octokit.pulls.createReviewComment({
       owner,
       repo,
