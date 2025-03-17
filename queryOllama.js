@@ -33,12 +33,13 @@ async function runQuery() {
         //console.log(diff);
         const regex = /@@ -(\d+),?\d* \+(\d+),?\d* @@/g;
         let match;
-        let lineChanges = {};
+        let lineChanges = [];
         while ((match = regex.exec(diff)) !== null) {
-          const oldLine = parseInt(match[1]); // Ligne de l'ancienne version
+          const filePath = match[1]; // Extract the modified file path
           const newLine = parseInt(match[2]); // Ligne de la nouvelle version
       
-          lineChanges[newLine] = true; // Stocker les lignes affectées
+          lineChanges.push({filePath, newLine}); // Stocker les lignes affectées
+          commentOnPR(PR_NUMBER, filePath, newLine);
         }
 
         console.log("Lignes changées :", Object.keys(lineChanges));
@@ -47,23 +48,30 @@ async function runQuery() {
           console.log("No changes detected.");
           process.exit(0);
         }
-      
-        // Post a comment on the PR
-        await octokit.rest.issues.createReviewComment({
-            owner,
-            repo,
-            pull_number: PR_NUMBER,
-            body: `Changement détecté sur la ligne ${lineNumber} de ${filePath}`,
-            commit_id: process.env.GITHUB_SHA,
-            path: filePath,
-            line: lineNumber,
-          });
+    
       
         console.log("Comment posted successfully.");
       } catch (error) {
         console.error("Error posting comment:", error);
         process.exit(1);
       }
+}
+
+async function commentOnPR(prNumber, filePath, lineNumber) {
+  try {
+    await octokit.pulls.createReviewComment({
+      owner,
+      repo,
+      pull_number: PR_NUMBER,
+      body: `Changement détecté sur la ligne ${lineNumber} de ${filePath}`,
+      commit_id: process.env.GITHUB_SHA,
+      path: filePath,
+      line: lineNumber,
+    });
+    console.log(`Commentaire ajouté sur ${filePath} à la ligne ${lineNumber}`);
+  } catch (error) {
+    console.error("Erreur lors de l'ajout du commentaire :", error);
+  }
 }
 
 runQuery();
