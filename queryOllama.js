@@ -10,9 +10,31 @@
 const GITHUB_TOKEN = process.env.GITHUB_TOKEN;
 const PR_NUMBER = process.env.PR_NUMBER;
 const REPO = process.env.REPO;
+const commitId = process.env.GITHUB_SHA;
 
 const { execSync } = require("child_process");
 
+async function commentOnPR(prNumber, filePath, lineNumber) {
+  try {
+    const { Octokit } = await import("@octokit/rest");
+
+    const [owner, repo] = REPO.split("/");
+    const octokit = new Octokit({ auth: GITHUB_TOKEN });
+  
+    await octokit.pulls.createReviewComment({
+      owner,
+      repo,
+      pull_number: prNumber,
+      body: `Changement détecté sur la ligne ${lineNumber} de ${filePath}`,
+      commit_id: commitId,
+      path: filePath,
+      line: lineNumber,
+    });
+    console.log(`Commentaire ajouté sur ${filePath} à la ligne ${lineNumber}`);
+  } catch (error) {
+    console.error("Erreur lors de l'ajout du commentaire :", error);
+  }
+}
 
 async function runQuery() {
     //const ollama = new OllamaApiModel(OLLAMA_URL, OLLAMA_PORT, MODEL, null);
@@ -55,26 +77,6 @@ async function runQuery() {
       }
 }
 
-async function commentOnPR(prNumber, filePath, lineNumber) {
-  try {
-    const { Octokit } = await import("@octokit/rest");
 
-    const [owner, repo] = REPO.split("/");
-    const octokit = new Octokit({ auth: GITHUB_TOKEN });
-  
-    await octokit.pulls.createReviewComment({
-      owner,
-      repo,
-      pull_number: PR_NUMBER,
-      body: `Changement détecté sur la ligne ${lineNumber} de ${filePath}`,
-      commit_id: process.env.GITHUB_SHA,
-      path: filePath,
-      line: lineNumber,
-    });
-    console.log(`Commentaire ajouté sur ${filePath} à la ligne ${lineNumber}`);
-  } catch (error) {
-    console.error("Erreur lors de l'ajout du commentaire :", error);
-  }
-}
 
 runQuery();
