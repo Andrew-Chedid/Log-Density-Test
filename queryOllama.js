@@ -27,8 +27,8 @@ async function commentOnPR(prNumber, filePath, lineNumber) {
       pull_number: prNumber,
       body: `Changement détecté sur la ligne 77 de CreatOption`,
       commit_id: '82c449b2c20938e154131f037dc9b84151b86971',
-      path: 'training_data/CreateOptions.java',
-      line: 77,
+      path: filePath,
+      line: lineNumber,
     });
     console.log(`Commentaire ajouté sur 77 de CreatOption`);
   } catch (error) {
@@ -56,7 +56,8 @@ async function runQuery() {
         let lineChanges = [];
         let filePath = '';
         let newLine = 0;
-        commentOnPR(PR_NUMBER, filePath, newLine);
+        commentOnPR(PR_NUMBER, 'training_data/CreateOptions.java', 77);
+        commentOnPR(PR_NUMBER, 'training_data/ClientCnxnSocketNIO.java', 196);
         while ((match = regex.exec(diff)) !== null) {
           const filePath = match[1]; // Extract the modified file path
           const newLine = parseInt(match[2]); // Ligne de la nouvelle version
