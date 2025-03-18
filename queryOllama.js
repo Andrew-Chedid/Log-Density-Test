@@ -24,8 +24,8 @@ async function commentOnPR(prNumber, filePath, lineNumber) {
       owner,
       repo,
       pull_number: prNumber,
-      body: `Changement détecté sur la ligne 77 de CreatOption`,
-      commit_id: '82c449b2c20938e154131f037dc9b84151b86971',
+      body: `HALLO :D`,
+      commit_id: commitId,
       path: filePath,
       line: lineNumber,
     });
