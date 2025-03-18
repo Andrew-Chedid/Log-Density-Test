@@ -49,23 +49,24 @@ async function runQuery() {
     try {
         // Get the git diff
         const diff = execSync("git diff origin/main *.java").toString();
-        //console.log("GIT DIFF:"+diff);
-        const regex = /diff --git a\/(.+?) b\/\1[\s\S]+?@@ -\d+,?\d* \+(\d+),?\d* @@/g;
+        const names = execSync("git diff --name-only origin/main *.java").toString();
+        console.log("GIT DIFF:"+diff);
+        //const regex = /diff --git a\/(.+?) b\/\1[\s\S]+?@@ -\d+,?\d* \+(\d+),?\d* @@/g;
         
         let match;
         let lineChanges = [];
         let filePath = '';
         let newLine = 0;
-        commentOnPR(PR_NUMBER, 'training_data/CreateOptions.java', 77);
-        commentOnPR(PR_NUMBER, 'training_data/ClientCnxnSocketNIO.java', 196);
-        while ((match = regex.exec(diff)) !== null) {
-          const filePath = match[1]; // Extract the modified file path
-          const newLine = parseInt(match[2]); // Ligne de la nouvelle version
+        //commentOnPR(PR_NUMBER, 'training_data/CreateOptions.java', 77);
+        //commentOnPR(PR_NUMBER, 'training_data/ClientCnxnSocketNIO.java', 196);
+        // while ((match = regex.exec(diff)) !== null) {
+        //   const filePath = match[1]; // Extract the modified file path
+        //   const newLine = parseInt(match[2]); // Ligne de la nouvelle version
       
-          lineChanges.push({filePath, newLine}); // Stocker les lignes affectées
-          //commentOnPR(PR_NUMBER, filePath, newLine);
-          //console.log(match);
-        }
+        //   lineChanges.push({filePath, newLine}); // Stocker les lignes affectées
+        //   //commentOnPR(PR_NUMBER, filePath, newLine);
+        //   //console.log(match);
+        // }
 
         console.log("Lignes changées :", lineChanges);
 
