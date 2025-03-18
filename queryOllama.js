@@ -55,7 +55,7 @@ async function runQuery() {
             .trim()
             .split("\n")
             .filter(file => file);
-            console.log("GIT DIFF:"+diff);
+        //console.log("GIT DIFF:"+diff);
         //const regex = /diff --git a\/(.+?) b\/\1[\s\S]+?@@ -\d+,?\d* \+(\d+),?\d* @@/g;
         for (const filePath of fileList) {
           console.log(`📌 Processing ${filePath}...`);
