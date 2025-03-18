@@ -55,6 +55,7 @@ async function runQuery() {
             .split("\n")
             .filter(file => file);
 
+        commentOnPR(PR_NUMBER, 'training_data/CreateOptions.java', 77);
         if (fileList.length === 0) {
           console.log("No Java files changed.");
           process.exit(0);
@@ -62,9 +63,8 @@ async function runQuery() {
 
         for (const filePath of fileList) {
           console.log(`Processing ${filePath}...`);
-    
           // Get the diff for the specific file
-          const diff = execSync(`git diff origin/main -- ${filePath}`).toString();
+          const diff = execSync(`git diff -U0 origin/main -- ${filePath}`).toString();
           const context = fs.readFileSync(filePath, 'utf8');
           // Extract changed line numbers using regex
 
