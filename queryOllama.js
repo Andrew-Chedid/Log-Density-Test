@@ -55,6 +55,11 @@ async function runQuery() {
             .split("\n")
             .filter(file => file);
 
+        if (fileList.length === 0) {
+          console.log("No Java files changed.");
+          process.exit(0);
+        }
+
         for (const filePath of fileList) {
           console.log(`Processing ${filePath}...`);
     
@@ -68,14 +73,6 @@ async function runQuery() {
 
         }
 
-        //console.log("Lignes changées :", lineChanges);
-
-        if (!diff) {
-          console.log("No changes detected.");
-          process.exit(0);
-        }
-    
-      
         console.log("Comment posted successfully.");
       } catch (error) {
         console.error("Error posting comment:", error);
