@@ -60,7 +60,7 @@ async function runQuery() {
         console.error("Missing required environment variables");
         process.exit(1);
     }
-    console.log(`PR_NUMBER: ${PR_NUMBER}, REPO: ${REPO}, COMMIT_ID: ${commitId}`);
+    //console.log(`PR_NUMBER: ${PR_NUMBER}, REPO: ${REPO}, COMMIT_ID: ${commitId}`);
     
     
     try {
