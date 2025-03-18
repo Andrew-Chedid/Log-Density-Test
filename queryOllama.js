@@ -1,12 +1,11 @@
 //const OllamaApiModel = require('./ollamaApiModelService');
-//const fs = require('fs');
 
 //const OLLAMA_URL = "http://localhost";
 //const OLLAMA_PORT = 11434;
 //const MODEL = "llama3.2:3b"; // Change selon le modèle dispo
 //const PROMPT_INTRO = "Analyse et explique les logs trouvés dans ces fichiers Java :\n\n";
 
-
+const fs = require('fs');
 const GITHUB_TOKEN = process.env.GITHUB_TOKEN;
 const PR_NUMBER = process.env.PR_NUMBER;
 const REPO = process.env.REPO;
@@ -55,13 +54,13 @@ async function runQuery() {
             .trim()
             .split("\n")
             .filter(file => file);
-            
+
         for (const filePath of fileList) {
           console.log(`Processing ${filePath}...`);
     
           // Get the diff for the specific file
           const diff = execSync(`git diff origin/main -- ${filePath}`).toString();
-          const context = execSync(`cat ${filePath}`).toString();
+          const context = fs.readFileSync(filePath, 'utf8');
           // Extract changed line numbers using regex
 
           console.log(`${filePath} changes: `+ diff);
