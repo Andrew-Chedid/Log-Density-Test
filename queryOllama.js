@@ -14,24 +14,25 @@ const REPO = process.env.REPO;
 const { execSync } = require("child_process");
 
 async function commentOnPR(prNumber, filePath, lineNumber) {  
-  async function getLatestCommitID() {
-    try {
-      const pr = await octokit.pulls.get({
-        owner,
-        repo,
-        pull_number: PR_NUMBER,
-      });
-      return pr.data.head.sha; // ✅ Latest commit in the PR
-    } catch (error) {
-      console.error("❌ Error fetching PR commit ID:", error);
-      process.exit(1);
-    }
-  }
+
   try {
     const { Octokit } = await import("@octokit/rest");
 
     const [owner, repo] = REPO.split("/");
     const octokit = new Octokit({ auth: GITHUB_TOKEN });
+    async function getLatestCommitID() {
+      try {
+        const pr = await octokit.pulls.get({
+          owner,
+          repo,
+          pull_number: PR_NUMBER,
+        });
+        return pr.data.head.sha; // ✅ Latest commit in the PR
+      } catch (error) {
+        console.error("❌ Error fetching PR commit ID:", error);
+        process.exit(1);
+      }
+    }    
     const commitId = await getLatestCommitID();
 
     await octokit.pulls.createReviewComment({
