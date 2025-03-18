@@ -55,21 +55,21 @@ async function runQuery() {
             .trim()
             .split("\n")
             .filter(file => file);
-        //console.log("GIT DIFF:"+diff);
-        //const regex = /diff --git a\/(.+?) b\/\1[\s\S]+?@@ -\d+,?\d* \+(\d+),?\d* @@/g;
+            
         for (const filePath of fileList) {
-          console.log(`📌 Processing ${filePath}...`);
+          console.log(`Processing ${filePath}...`);
     
           // Get the diff for the specific file
           const diff = execSync(`git diff origin/main -- ${filePath}`).toString();
-    
+          const context = execSync(`cat ${filePath}`).toString();
           // Extract changed line numbers using regex
 
-          console.log(`${filePath} changes: `+ diff)
+          console.log(`${filePath} changes: `+ diff);
+          console.log("full context: "+context);
 
         }
 
-        console.log("Lignes changées :", lineChanges);
+        //console.log("Lignes changées :", lineChanges);
 
         if (!diff) {
           console.log("No changes detected.");
