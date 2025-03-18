@@ -12,13 +12,13 @@ const REPO = process.env.REPO;
 //const commitId = process.env.GITHUB_SHA;
 
 const { execSync } = require("child_process");
+const { Octokit } = await import("@octokit/rest");
 
+const [owner, repo] = REPO.split("/");
+const octokit = new Octokit({ auth: GITHUB_TOKEN });
 async function commentOnPR(prNumber, filePath, lineNumber) {
   try {
-    const { Octokit } = await import("@octokit/rest");
-
-    const [owner, repo] = REPO.split("/");
-    const octokit = new Octokit({ auth: GITHUB_TOKEN });
+ 
     const commitId = await getLatestCommitID();
 
     await octokit.pulls.createReviewComment({
