@@ -16,9 +16,6 @@ jobs:
 
     
     steps:
-      - name: Wait for Ollama to start
-        run: sleep 10  # Ajuste si nécessaire
-
       - name: Run Ollama Query
         env:
             GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
