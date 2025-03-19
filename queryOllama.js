@@ -86,26 +86,22 @@ async function runQuery() {
           // Get the diff for the specific file
           const diff = execSync(`git diff -U0 origin/main -- ${filePath}`).toString();
           const context = fs.readFileSync(filePath, 'utf8');
+
+          
+        // ================ call API here ====================
           let reponse = '';
           const data = {
             diff: diff,
             context: context
           }
+          console.log(data);
           axios.post(url_lama, data).then(response => {
             reponse = response.data;
             console.log('Response:', reponse);
           })
           .catch(error => {
             console.error('Error:', error.response ? error.response.data : error.message);
-          });;
-          // Extract changed line numbers using regex
-        // Extract changed line numbers using regex
-        // ================ call API here ====================
-          
-        // ================ returns line number and changes ================
-        //commentOnPR(PR_NUMBER, filePath, 77);
-          //console.log(`${filePath} changes: `+ diff);
-          //console.log("full context: "+context);
+          });;        // ================ returns line number and changes ================
 
         }
 
