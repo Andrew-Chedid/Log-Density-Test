@@ -94,7 +94,7 @@ async function runQuery() {
             diff: diff,
             context: context
           }
-          console.log(data);
+          //console.log(data);
           axios.post(url_lama, data).then(response => {
             reponse = response.data;
             console.log('Response:', reponse);
