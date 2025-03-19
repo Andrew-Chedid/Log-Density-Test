@@ -6,10 +6,12 @@
 //const PROMPT_INTRO = "Analyse et explique les logs trouvés dans ces fichiers Java :\n\n";
 
 const fs = require('fs');
+const axios = require('axios');
 const GITHUB_TOKEN = process.env.GITHUB_TOKEN;
 const PR_NUMBER = process.env.PR_NUMBER;
 const REPO = process.env.REPO;
 //const commitId = process.env.GITHUB_SHA;
+
 
 const { execSync } = require("child_process");
 
@@ -27,12 +29,13 @@ async function commentOnPR(prNumber, filePath, lineNumber) {
           repo,
           pull_number: PR_NUMBER,
         });
-        return pr.data.head.sha; // ✅ Latest commit in the PR
+        return pr.data.head.sha; // Latest commit in the PR
       } catch (error) {
-        console.error("❌ Error fetching PR commit ID:", error);
+        console.error("Error fetching PR commit ID:", error);
         process.exit(1);
       }
-    }    
+    }
+
     const commitId = await getLatestCommitID();
 
     await octokit.pulls.createReviewComment({
@@ -55,7 +58,6 @@ async function commentOnPR(prNumber, filePath, lineNumber) {
 
 async function runQuery() {
     //const ollama = new OllamaApiModel(OLLAMA_URL, OLLAMA_PORT, MODEL, null);
-    
     if (!GITHUB_TOKEN || !PR_NUMBER || !REPO) {
         console.error("Missing required environment variables");
         process.exit(1);
@@ -73,7 +75,6 @@ async function runQuery() {
             .split("\n")
             .filter(file => file);
 
-        commentOnPR(PR_NUMBER, 'training_data/CreateOptions.java', 77);
         if (fileList.length === 0) {
           console.log("No Java files changed.");
           process.exit(0);
@@ -85,7 +86,11 @@ async function runQuery() {
           const diff = execSync(`git diff -U0 origin/main -- ${filePath}`).toString();
           const context = fs.readFileSync(filePath, 'utf8');
           // Extract changed line numbers using regex
-
+        // Extract changed line numbers using regex
+        // ================ call API here ====================
+          
+        // ================ returns line number and changes ================
+        //commentOnPR(PR_NUMBER, filePath, 77);
           console.log(`${filePath} changes: `+ diff);
           console.log("full context: "+context);
 
