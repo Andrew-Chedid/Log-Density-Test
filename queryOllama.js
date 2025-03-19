@@ -79,20 +79,33 @@ async function runQuery() {
           console.log("No Java files changed.");
           process.exit(0);
         }
+        const url_lama = 'http://127.0.0.1:8000/improve-logs';
 
         for (const filePath of fileList) {
           console.log(`Processing ${filePath}...`);
           // Get the diff for the specific file
           const diff = execSync(`git diff -U0 origin/main -- ${filePath}`).toString();
           const context = fs.readFileSync(filePath, 'utf8');
+          let reponse = '';
+          const data = {
+            diff: diff,
+            context: context
+          }
+          axios.post(url,data).then(response => {
+            reponse = response.data;
+            console.log('Response:', reponse);
+          })
+          .catch(error => {
+            console.error('Error:', error.response ? error.response.data : error.message);
+          });;
           // Extract changed line numbers using regex
         // Extract changed line numbers using regex
         // ================ call API here ====================
           
         // ================ returns line number and changes ================
         //commentOnPR(PR_NUMBER, filePath, 77);
-          console.log(`${filePath} changes: `+ diff);
-          console.log("full context: "+context);
+          //console.log(`${filePath} changes: `+ diff);
+          //console.log("full context: "+context);
 
         }
 
