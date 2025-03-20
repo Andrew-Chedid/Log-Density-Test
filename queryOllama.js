@@ -7,7 +7,6 @@
 
 const fs = require('fs');
 const axios = require('axios');
-const octokit = require('octokit');
 const GITHUB_TOKEN = process.env.GITHUB_TOKEN;
 const PR_NUMBER = process.env.PR_NUMBER;
 const REPO = process.env.REPO;
@@ -39,14 +38,17 @@ async function commentOnPR(prNumber, filePath, lineNumber) {
 
     const commitId = await getLatestCommitID();
 
-    await octokit.pulls.createReviewComment({
-      owner,
-      repo,
-      pull_number: prNumber,
-      body: `HALLO :D`,
-      commit_id: commitId,
-      path: filePath,
-      line: lineNumber,
+    import('octokit').then((octokitModule) => {
+      const octokit = octokitModule.default; // Use the module
+        octokit.pulls.createReviewComment({
+          owner,
+          repo,
+          pull_number: prNumber,
+          body: `HALLO :D`,
+          commit_id: commitId,
+          path: filePath,
+          line: lineNumber,
+        });
     });
     console.log(`Commentaire ajouté sur 77 de CreatOption`);
   } catch (error) {
