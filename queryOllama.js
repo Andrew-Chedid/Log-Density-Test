@@ -7,49 +7,45 @@
 
 const fs = require('fs');
 const axios = require('axios');
+const { execSync } = require("child_process");
+const { Octokit } = await import("@octokit/rest");
+const [owner, repo] = REPO.split("/");
+const octokit = new Octokit({ auth: GITHUB_TOKEN });
+
 const GITHUB_TOKEN = process.env.GITHUB_TOKEN;
 const PR_NUMBER = process.env.PR_NUMBER;
 const REPO = process.env.REPO;
-//const commitId = process.env.GITHUB_SHA;
+const commitId = process.env.GITHUB_SHA;
 
-
-const { execSync } = require("child_process");
+async function getLatestCommitID() {
+  try {
+    const pr = await octokit.pulls.get({
+      owner,
+      repo,
+      pull_number: PR_NUMBER,
+    });
+    return pr.data.head.sha; // Latest commit in the PR
+  } catch (error) {
+    console.error("Error fetching PR commit ID:", error);
+    process.exit(1);
+  }
+}
 
 async function commentOnPR(prNumber, filePath, lineNumber) {  
 
   try {
-    const { Octokit } = await import("@octokit/rest");
-
-    const [owner, repo] = REPO.split("/");
-    const octokit = new Octokit({ auth: GITHUB_TOKEN });
-    async function getLatestCommitID() {
-      try {
-        const pr = await octokit.pulls.get({
-          owner,
-          repo,
-          pull_number: PR_NUMBER,
-        });
-        return pr.data.head.sha; // Latest commit in the PR
-      } catch (error) {
-        console.error("Error fetching PR commit ID:", error);
-        process.exit(1);
-      }
-    }
-
     const commitId = await getLatestCommitID();
+    octokitModule.default; // Use the module
+      octokit.pulls.createReviewComment({
+        owner,
+        repo,
+        pull_number: prNumber,
+        body: `HALLO :D`,
+        commit_id: commitId,
+        path: filePath,
+        line: lineNumber,
+      });
 
-    import('octokit').then((octokitModule) => {
-      const octokit = octokitModule.default; // Use the module
-        octokit.pulls.createReviewComment({
-          owner,
-          repo,
-          pull_number: prNumber,
-          body: `HALLO :D`,
-          commit_id: commitId,
-          path: filePath,
-          line: lineNumber,
-        });
-    });
     console.log(`Commentaire ajouté sur 77 de CreatOption`);
   } catch (error) {
     console.error("Erreur lors de l'ajout du commentaire :", error);
