@@ -45,13 +45,11 @@ async function runQuery() {
           process.exit(0);
         }
         
-
         for (const filePath of fileList) {
           console.log(`Processing ${filePath}...`);
           const diff = execSync(`git diff -U0 origin/main -- ${filePath}`).toString();
           const context = fs.readFileSync(filePath, 'utf8');
 
-          
         // ================ call API here ====================
           let reponse = '';
           const data = { diff, context }
@@ -63,7 +61,7 @@ async function runQuery() {
               owner,
               repo,
               pull_number: PR_NUMBER,
-              body: reponse[0]['suggested'],
+              body: reponse[0]['reason'] + '\n' + reponse[0]['suggested'],
               commit_id: commitId,
               path: filePath,
               line: reponse[0]['line'],
