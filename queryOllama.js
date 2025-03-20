@@ -7,6 +7,7 @@
 
 const fs = require('fs');
 const axios = require('axios');
+const octokit = require('octokit');
 const GITHUB_TOKEN = process.env.GITHUB_TOKEN;
 const PR_NUMBER = process.env.PR_NUMBER;
 const REPO = process.env.REPO;
@@ -94,10 +95,10 @@ async function runQuery() {
             diff: diff,
             context: context
           }
-          console.log(data['diff']);
           axios.post(url_lama, data).then(response => {
             reponse = response.data;
             console.log('Response:', reponse);
+            
             octokit.pulls.createReviewComment({
               owner,
               repo,
