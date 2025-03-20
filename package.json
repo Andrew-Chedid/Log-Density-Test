@@ -1,10 +1,11 @@
 {
-  "name": "package",
+  "name": "log-density-test",
   "version": "1.0.0",
   "main": "queryOllama.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "keywords": [],
   "author": "",
   "license": "ISC",
   "description": ""
