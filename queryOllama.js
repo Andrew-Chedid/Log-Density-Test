@@ -9,13 +9,12 @@ const fs = require('fs');
 const axios = require('axios');
 const { execSync } = require("child_process");
 const { Octokit } = import("@octokit/rest");
-
+const url_lama = 'http://127.0.0.1:8000/improve-logs';
 const octokit = new Octokit({ auth: GITHUB_TOKEN });
 const GITHUB_TOKEN = process.env.GITHUB_TOKEN;
 const PR_NUMBER = process.env.PR_NUMBER;
 const REPO = process.env.REPO;
 const [owner, repo] = REPO.split("/");
-const commitId = process.env.GITHUB_SHA;
 
 async function getLatestCommitID() {
   try {
@@ -31,43 +30,15 @@ async function getLatestCommitID() {
   }
 }
 
-async function commentOnPR(prNumber, filePath, lineNumber) {  
-
-  try {
-    const commitId = await getLatestCommitID();
-    octokitModule.default; // Use the module
-      octokit.pulls.createReviewComment({
-        owner,
-        repo,
-        pull_number: prNumber,
-        body: `HALLO :D`,
-        commit_id: commitId,
-        path: filePath,
-        line: lineNumber,
-      });
-
-    console.log(`Commentaire ajouté sur 77 de CreatOption`);
-  } catch (error) {
-    console.error("Erreur lors de l'ajout du commentaire :", error);
-  }
-
-}
-
-
-
 async function runQuery() {
-    //const ollama = new OllamaApiModel(OLLAMA_URL, OLLAMA_PORT, MODEL, null);
+    const commitId = await getLatestCommitID();
+
     if (!GITHUB_TOKEN || !PR_NUMBER || !REPO) {
         console.error("Missing required environment variables");
         process.exit(1);
     }
-    //console.log(`PR_NUMBER: ${PR_NUMBER}, REPO: ${REPO}, COMMIT_ID: ${commitId}`);
-    
     
     try {
-
-
-        // Get the git diff
         const fileList = execSync("git diff --name-only origin/main -- *.java")
             .toString()
             .trim()
@@ -78,21 +49,17 @@ async function runQuery() {
           console.log("No Java files changed.");
           process.exit(0);
         }
-        const url_lama = 'http://127.0.0.1:8000/improve-logs';
+        
 
         for (const filePath of fileList) {
           console.log(`Processing ${filePath}...`);
-          // Get the diff for the specific file
           const diff = execSync(`git diff -U0 origin/main -- ${filePath}`).toString();
           const context = fs.readFileSync(filePath, 'utf8');
 
           
         // ================ call API here ====================
           let reponse = '';
-          const data = {
-            diff: diff,
-            context: context
-          }
+          const data = { diff, context }
           axios.post(url_lama, data).then(response => {
             reponse = response.data;
             console.log('Response:', reponse);
@@ -100,11 +67,11 @@ async function runQuery() {
             octokit.pulls.createReviewComment({
               owner,
               repo,
-              pull_number: prNumber,
+              pull_number: PR_NUMBER,
               body: reponse['suggested'],
               commit_id: commitId,
               path: filePath,
-              line: lineNumber
+              line: reponse['line']
             });
           })
           .catch(error => {
