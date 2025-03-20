@@ -8,7 +8,7 @@
 const fs = require('fs');
 const axios = require('axios');
 const { execSync } = require("child_process");
-const { Octokit } = await import("@octokit/rest");
+const { Octokit } = import("@octokit/rest");
 const [owner, repo] = REPO.split("/");
 const octokit = new Octokit({ auth: GITHUB_TOKEN });
 
