@@ -1,0 +1,22 @@
+{
+  "name": "log-density-test",
+  "version": "1.0.0",
+  "main": "queryOllama.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Andrew-Chedid/Log-Density-Test.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Andrew-Chedid/Log-Density-Test/issues"
+  },
+  "homepage": "https://github.com/Andrew-Chedid/Log-Density-Test#readme",
+  "description": "",
+  "dependencies": {
+    "axios": "^1.8.4"
+  }
+}
