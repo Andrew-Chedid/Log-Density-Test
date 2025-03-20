@@ -103,6 +103,7 @@ async function runQuery() {
             console.error('Error:', error.response ? error.response.data : error.message);
           });;        // ================ returns line number and changes ================
 
+          
         }
 
         console.log("Comment posted successfully.");
