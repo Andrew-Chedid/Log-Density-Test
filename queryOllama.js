@@ -46,31 +46,32 @@ async function runQuery() {
         }
         
         for (const filePath of fileList) {
-          console.log(`Processing ${filePath}...`);
-          const diff = execSync(`git diff -U0 origin/main -- ${filePath}`).toString();
-          const context = fs.readFileSync(filePath, 'utf8');
-
-        // ================ call API here ====================
-          let reponse = '';
-          const data = { diff, context }
-          axios.post(url_lama, data).then(response => {
-            reponse = response.data;
-            console.log('Response:', reponse);
+            console.log(`Processing ${filePath}...`);
+            const diff = execSync(`git diff -U0 origin/main -- ${filePath}`).toString();
+            const context = fs.readFileSync(filePath, 'utf8');
+            const data = { diff, context }
             
-            octokit.pulls.createReviewComment({
-              owner,
-              repo,
-              pull_number: PR_NUMBER,
-              body: reponse[0]['reason'] + '\n' + reponse[0]['suggested'],
-              commit_id: commitId,
-              path: filePath,
-              line: reponse[0]['line'],
-              position: 1
-            });
-          })
-          .catch(error => {
-            console.error('Error:', error.response ? error.response.data : error.message);
-          });;        // ================ returns line number and changes ================
+            axios.post(url_lama, data).then(response => {
+              const reponse = response.data;  // Ensure response is assigned properly
+              console.log('Response:', reponse);
+          
+              reponse.forEach((comment, index) => {
+                  octokit.rest.pulls.createReviewComment({
+                      owner,
+                      repo,
+                      pull_number: PR_NUMBER,
+                      body: `${comment['reason']}\n${comment['suggested']}`,
+                      commit_id: commitId,
+                      path: filePath,
+                      position: comment['position'] || index + 1  // Ensure a valid position
+                  }).catch(error => {
+                      console.error(`Error creating review comment for index ${index}:`, error.response?.data || error.message);
+                  });
+              });
+          }).catch(error => {
+              console.error("Error sending data to Lama:", error.response?.data || error.message);
+          });
+          
 
         }
 
