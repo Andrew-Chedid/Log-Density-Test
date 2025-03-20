@@ -63,7 +63,8 @@ async function runQuery() {
                       body: `${comment['reason']}\n${comment['suggested']}`,
                       commit_id: commitId,
                       path: filePath,
-                      position: 1
+                      position: 1,
+                      line: comment['line']
                   }).catch(error => {
                       console.error(`Error creating review comment for index ${index}:`, error.response?.data || error.message);
                   });
