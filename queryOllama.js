@@ -9,12 +9,12 @@ const fs = require('fs');
 const axios = require('axios');
 const { execSync } = require("child_process");
 const { Octokit } = import("@octokit/rest");
-const [owner, repo] = REPO.split("/");
-const octokit = new Octokit({ auth: GITHUB_TOKEN });
 
+const octokit = new Octokit({ auth: GITHUB_TOKEN });
 const GITHUB_TOKEN = process.env.GITHUB_TOKEN;
 const PR_NUMBER = process.env.PR_NUMBER;
 const REPO = process.env.REPO;
+const [owner, repo] = REPO.split("/");
 const commitId = process.env.GITHUB_SHA;
 
 async function getLatestCommitID() {
