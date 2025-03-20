@@ -98,6 +98,15 @@ async function runQuery() {
           axios.post(url_lama, data).then(response => {
             reponse = response.data;
             console.log('Response:', reponse);
+            octokit.pulls.createReviewComment({
+              owner,
+              repo,
+              pull_number: prNumber,
+              body: reponse['suggested'],
+              commit_id: commitId,
+              path: filePath,
+              line: lineNumber
+            });
           })
           .catch(error => {
             console.error('Error:', error.response ? error.response.data : error.message);
