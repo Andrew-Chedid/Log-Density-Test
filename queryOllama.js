@@ -63,10 +63,11 @@ async function runQuery() {
               owner,
               repo,
               pull_number: PR_NUMBER,
-              body: reponse['suggested'],
+              body: reponse[0]['suggested'],
               commit_id: commitId,
               path: filePath,
-              line: reponse['line']
+              line: reponse[0]['line'],
+              position: 1
             });
           })
           .catch(error => {
