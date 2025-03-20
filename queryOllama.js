@@ -50,7 +50,7 @@ async function runQuery() {
             const diff = execSync(`git diff -U0 origin/main -- ${filePath}`).toString();
             const context = fs.readFileSync(filePath, 'utf8');
             const data = { diff, context }
-            
+
             axios.post(url_lama, data).then(response => {
               const reponse = response.data;  // Ensure response is assigned properly
               console.log('Response:', reponse);
@@ -63,7 +63,7 @@ async function runQuery() {
                       body: `${comment['reason']}\n${comment['suggested']}`,
                       commit_id: commitId,
                       path: filePath,
-                      position: comment['position'] || index + 1  // Ensure a valid position
+                      position: 1
                   }).catch(error => {
                       console.error(`Error creating review comment for index ${index}:`, error.response?.data || error.message);
                   });
