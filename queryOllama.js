@@ -1,53 +1,81 @@
-//const OllamaApiModel = require('./ollamaApiModelService');
-//const fs = require('fs');
+import fs from "fs";
+import axios from "axios";
+import { execSync } from "child_process";
+import { Octokit } from "@octokit/rest";
 
-//const OLLAMA_URL = "http://localhost";
-//const OLLAMA_PORT = 11434;
-//const MODEL = "llama3.2:3b"; // Change selon le modèle dispo
-//const PROMPT_INTRO = "Analyse et explique les logs trouvés dans ces fichiers Java :\n\n";
-
-
+const url_lama = 'http://127.0.0.1:8000/improve-logs';
 const GITHUB_TOKEN = process.env.GITHUB_TOKEN;
+
+const octokit = new Octokit({ auth: GITHUB_TOKEN });
 const PR_NUMBER = process.env.PR_NUMBER;
 const REPO = process.env.REPO;
+const [owner, repo] = REPO.split("/");
 
-const { execSync } = require("child_process");
-
+async function getLatestCommitID() {
+  try {
+    const pr = await octokit.pulls.get({
+      owner,
+      repo,
+      pull_number: PR_NUMBER,
+    });
+    return pr.data.head.sha; // Latest commit in the PR
+  } catch (error) {
+    console.error("Error fetching PR commit ID:", error);
+    process.exit(1);
+  }
+}
 
 async function runQuery() {
-    //const ollama = new OllamaApiModel(OLLAMA_URL, OLLAMA_PORT, MODEL, null);
-    
+    const commitId = await getLatestCommitID();
+
     if (!GITHUB_TOKEN || !PR_NUMBER || !REPO) {
         console.error("Missing required environment variables");
         process.exit(1);
     }
-
     
     try {
-        // Get the git diff
-        const diff = execSync("git diff origin/main *.java").toString();
-        console.log("GIT DIFF:"+diff);
-        const regex = /diff --git a\/(.+?) b\/\1[\s\S]+?@@ -\d+,?\d* \+(\d+),?\d* @@/g;
-        
-        let match;
-        let lineChanges = [];
-        while ((match = regex.exec(diff)) !== null) {
-          const filePath = match[1]; // Extract the modified file path
-          const newLine = parseInt(match[2]); // Ligne de la nouvelle version
-      
-          lineChanges.push({filePath, newLine}); // Stocker les lignes affectées
-          commentOnPR(PR_NUMBER, filePath, newLine);
-          console.log(match);
-        }
+        const fileList = execSync("git diff --name-only origin/main -- *.java")
+            .toString()
+            .trim()
+            .split("\n")
+            .filter(file => file);
 
-        console.log("Lignes changées :", lineChanges);
-
-        if (!diff) {
-          console.log("No changes detected.");
+        if (fileList.length === 0) {
+          console.log("No Java files changed.");
           process.exit(0);
         }
-    
-      
+        
+        for (const filePath of fileList) {
+            console.log(`Processing ${filePath}...`);
+            const diff = execSync(`git diff -U0 origin/main -- ${filePath}`).toString();
+            const context = fs.readFileSync(filePath, 'utf8');
+            const data = { diff, context }
+
+            axios.post(url_lama, data).then(response => {
+              const reponse = response.data;  // Ensure response is assigned properly
+              console.log('Response:', reponse);
+          
+              reponse.forEach((comment, index) => {
+                  octokit.rest.pulls.createReviewComment({
+                      owner,
+                      repo,
+                      pull_number: PR_NUMBER,
+                      body: `${comment['reason']}\n${comment['suggested']}`,
+                      commit_id: commitId,
+                      path: filePath,
+                      position: 1,
+                      line: comment['line']
+                  }).catch(error => {
+                      console.error(`Error creating review comment for index ${index}:`, error.response?.data || error.message);
+                  });
+              });
+          }).catch(error => {
+              console.error("Error sending data to Lama:", error.response?.data || error.message);
+          });
+          
+
+        }
+
         console.log("Comment posted successfully.");
       } catch (error) {
         console.error("Error posting comment:", error);
@@ -55,26 +83,6 @@ async function runQuery() {
       }
 }
 
-async function commentOnPR(prNumber, filePath, lineNumber) {
-  try {
-    const { Octokit } = await import("@octokit/rest");
 
-    const [owner, repo] = REPO.split("/");
-    const octokit = new Octokit({ auth: GITHUB_TOKEN });
-  
-    await octokit.pulls.createReviewComment({
-      owner,
-      repo,
-      pull_number: PR_NUMBER,
-      body: `Changement détecté sur la ligne ${lineNumber} de ${filePath}`,
-      commit_id: process.env.GITHUB_SHA,
-      path: filePath,
-      line: lineNumber,
-    });
-    console.log(`Commentaire ajouté sur ${filePath} à la ligne ${lineNumber}`);
-  } catch (error) {
-    console.error("Erreur lors de l'ajout du commentaire :", error);
-  }
-}
 
 runQuery();
