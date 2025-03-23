@@ -60,7 +60,7 @@ async function runQuery() {
                       owner,
                       repo,
                       pull_number: PR_NUMBER,
-                      body: `${comment['reason']}\n${comment['suggested']}`,
+                      body: `${comment['reason']}\n\`\`\`suggestion\n${comment['suggested']}\n\`\`\``,
                       commit_id: commitId,
                       path: filePath,
                       position: 1,
