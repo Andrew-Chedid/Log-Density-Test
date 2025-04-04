@@ -76,13 +76,6 @@ public class CreateOptions {
             this.createMode = Objects.requireNonNull(createMode, "create mode is mandatory for create options");
             this.acl = Objects.requireNonNull(acl, "acl is mandatory for create options");
             System.out.println("HALLO :D");
-            System.out.println("HALLO :D");
-            System.out.println("HALLO :D");
-            System.out.println("HALLO :D");
-            System.out.println("HALLO :D");
-            System.out.println("HAdddddLLO df ssssssssssssssss :D");
-            System.out.println("HALLO :D");
-            System.out.println("heehee :D");
 
         }
 
