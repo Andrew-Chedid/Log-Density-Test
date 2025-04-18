@@ -193,7 +193,7 @@ public class ClientCnxnSocketNIO extends ClientCnxnSocket {
                 sock.socket().shutdownInput();
             } catch (IOException e) {
                 LOG.debug("Ignoring exception during shutdown input", e);
-                LOG.debug("HALLO :D", e);
+                LOG.debug("testing", e);
             }
             try {
                 sock.socket().shutdownOutput();

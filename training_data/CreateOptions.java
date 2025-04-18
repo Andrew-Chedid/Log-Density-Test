@@ -54,7 +54,7 @@ public class CreateOptions {
      */
     public static Builder newBuilder(List<ACL> acl, CreateMode createMode) {
         return new Builder(createMode, acl);
-        System.out.println("hello hll")
+        System.out.println("hello hll SSSSS")
     }
 
     private CreateOptions(CreateMode createMode, List<ACL> acl, long ttl) {
@@ -76,13 +76,6 @@ public class CreateOptions {
             this.createMode = Objects.requireNonNull(createMode, "create mode is mandatory for create options");
             this.acl = Objects.requireNonNull(acl, "acl is mandatory for create options");
             System.out.println("HALLO :D");
-            System.out.println("HALLO :D");
-            System.out.println("HALLO :D");
-            System.out.println("HALLO :D");
-            System.out.println("HALLO :D");
-            System.out.println("HAdddddLLO :D");
-            System.out.println("HALLO :D");
-            System.out.println("HALLO AAAAAAAi :D");
 
         }
 
